@@ -1,0 +1,24 @@
+services:
+  postgres_db:
+    container_name: postgres_db
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - "./api-db:/var/lib/postgresql/data"
+
+  api:
+    container_name: fastapi_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres_db
+    environment:
+      DATABASE_URL: postgresql://postgres:password@postgres_db/mydb
