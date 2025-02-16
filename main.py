@@ -48,6 +48,20 @@ def get_wizard(wizard_id: int, db: Session = Depends(get_db)):
     return db.query(Wizard).filter(Wizard.id == wizard_id).first()
 
 
+@app.put("wizards/{wizard_id}")
+def update_wizard(wizard_id: int, name: str, house: str, gender: str,
+                  db: Session = Depends(get_db)):
+    wizard = db.query(Wizard).filter(Wizard.id == wizard_id).first()
+
+    if wizard:
+        wizard.name = name
+        wizard.house = house
+        wizard.gender = gender
+        db.commit()
+        db.refresh(wizard)
+    return wizard
+
+
 @app.delete("/wizards/{wizard_id}")
 def delete_wizard(wizard_id: int, db: Session = Depends(get_db)):
     wizard = db.query(Wizard).filter(Wizard.id == wizard_id).first()
