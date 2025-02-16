@@ -36,3 +36,8 @@ def create_wizard(wizard: WizardCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_wizard)
     return new_wizard
+
+
+@app.get("/wizards/")
+def get_wizards(db: Session = Depends(get_db)):
+    return db.query(Wizard).all()
