@@ -41,3 +41,18 @@ def create_wizard(wizard: WizardCreate, db: Session = Depends(get_db)):
 @app.get("/wizards/")
 def get_wizards(db: Session = Depends(get_db)):
     return db.query(Wizard).all()
+
+
+@app.get("/wizards/{wizard_id}")
+def get_wizard(wizard_id: int, db: Session = Depends(get_db)):
+    return db.query(Wizard).filter(Wizard.id == wizard_id).first()
+
+
+@app.delete("/wizards/{wizard_id}")
+def delete_wizard(wizard_id: int, db: Session = Depends(get_db)):
+    wizard = db.query(Wizard).filter(Wizard.id == wizard_id).first()
+
+    if wizard:
+        db.delete(wizard)
+        db.commit()
+    return {"message": "Wizard deleted"}
